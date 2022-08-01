@@ -22,6 +22,9 @@ var leader: Leader = undefined;
 var journal: Journal = undefined;
 var state: State = undefined;
 
+// ----------------------------------------------------------------
+
+// todo x: 事件类型(EventLoop)
 const Event = packed struct {
     op: enum(u32) {
         Accept,
@@ -31,6 +34,8 @@ const Event = packed struct {
     },
     connection_id: u32,
 };
+
+// ----------------------------------------------------------------
 
 fn accept(ring: *IO_Uring, fd: os.fd_t, addr: *os.sockaddr, addr_len: *os.socklen_t) !void {
     assert(connections.accepting == false);
@@ -44,6 +49,8 @@ fn accept(ring: *IO_Uring, fd: os.fd_t, addr: *os.sockaddr, addr_len: *os.sockle
     connections.accepting = true;
 }
 
+// ----------------------------------------------------------------
+
 fn accept_completed(ring: *IO_Uring, cqe: *const io_uring_cqe) !void {
     // The Accept SQE has been fulfilled, and we are therefore no longer accepting connections:
     // This may change at the end of the event loop, but for now we reflect this state immediately.
@@ -51,31 +58,51 @@ fn accept_completed(ring: *IO_Uring, cqe: *const io_uring_cqe) !void {
     connections.accepting = false;
     // TODO Return detailed errors for accept():
     if (cqe.res < 0) return os.unexpectedErrno(@intCast(usize, -cqe.res));
+
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x: 数据部分
+    // todo x:
     // Create a connection for this socket fd:
     var connection = try connections.set(cqe.res);
+
     log.debug("connection {}: accepted fd={}", .{ connection.id, connection.fd });
     assert(connection.fd == cqe.res);
     assert(connection.references == 1);
     assert(connection.recv_size == 0);
     assert(connection.send_offset == 0);
     assert(connection.send_size == 0);
+
+    // ----------------------------------------------------------------
+
+    // todo x:
     // Read from this connection:
     try recv(ring, connection);
 }
 
+// ----------------------------------------------------------------
+
 fn recv(ring: *IO_Uring, connection: *Connection) !void {
     const event = Event{ .op = .Recv, .connection_id = connection.id };
+
     const user_data = @bitCast(u64, event);
     assert(connection.fd >= 0);
     assert(connection.references == 1);
+
     connection.references += 1;
     const offset = connection.recv_size;
     log.debug("connection {}: recv[{}..]", .{ connection.id, offset });
+
+    // todo x:
+    // todo x:
+    // todo x:
     // We limit requests (as well as all inflight data) to request_size_max and not recv.len:
     // The difference between recv.len and request_size_max is reserved for sector padding.
     _ = try ring.recv(user_data, connection.fd, connection.recv[offset..config.request_size_max], os.MSG_NOSIGNAL);
 }
 
+// todo x: 接收:
 fn recv_completed(ring: *IO_Uring, cqe: *const io_uring_cqe, connection: *Connection) !void {
     assert(connection.references == 2);
     connection.references -= 1;
@@ -94,9 +121,17 @@ fn recv_completed(ring: *IO_Uring, cqe: *const io_uring_cqe, connection: *Connec
         // parse() uses `prev_recv_size` to gauge progress, and whether the header must be verified.
         const prev_recv_size: usize = connection.recv_size;
         connection.recv_size += @intCast(usize, cqe.res);
+
+        // ----------------------------------------------------------------
+
+        // todo x:
+        // todo x: 正常处理:
+        // todo x:
         try parse(ring, connection, prev_recv_size);
     }
 }
+
+// ----------------------------------------------------------------
 
 fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void {
     log.debug("connection {}: parse: recv_size={}", .{ connection.id, connection.recv_size });
@@ -109,6 +144,9 @@ fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void 
     assert(connection.send_size == 0);
     assert(prev_recv_size < connection.recv_size);
 
+    // ----------------------------------------------------------------
+
+    // todo x:
     // The request header is incomplete, read more...
     if (connection.recv_size < @sizeOf(NetworkHeader)) return try recv(ring, connection);
 
@@ -132,9 +170,17 @@ fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void 
         return try close(ring, connection, "request exceeded config.request_size_max");
     }
 
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     // Data is incomplete, read more (we know this can fit in the receive buffer)...
     if (connection.recv_size < request.size) return try recv(ring, connection);
 
+    // todo x:
+    // todo x: request data
+    // todo x:
     // We have the complete request header and corresponding data, verify data:
     var request_data = connection.recv[@sizeOf(NetworkHeader)..request.size];
     if (!request.valid_checksum_data(request_data)) {
@@ -145,6 +191,8 @@ fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void 
     if (!leader.assign_timestamps(request.command, request_data)) {
         return try close(ring, connection, "reserved timestamp not zero");
     }
+
+    // ----------------------------------------------------------------
 
     // Zero pad the request out to a sector multiple, required by the journal for direct I/O:
     // The journal also adds another sector for the EOF entry.
@@ -163,7 +211,12 @@ fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void 
         connection.recv_size += padding_size;
     }
 
+    // todo x:
+    // todo x:
+    // todo x:
     try journal.append(request.command, request.size, connection.recv[0..journal_append_size]);
+
+    // ----------------------------------------------------------------
 
     // Apply as input to state machine, writing any response data directly to the send buffer:
     const response_data_size = state.apply(request.command, request_data, connection.send[@sizeOf(NetworkHeader)..]);
@@ -194,28 +247,48 @@ fn parse(ring: *IO_Uring, connection: *Connection, prev_recv_size: usize) !void 
     connection.recv_size = pipeline_size;
     log.debug("connection {}: parse: pipeline_size={}", .{ connection.id, pipeline_size });
 
+    // ----------------------------------------------------------------
+
     // Ack:
     connection.send_offset = 0;
     connection.send_size = response.size;
+
+    // todo x:
     try send(ring, connection);
 }
 
+// ----------------------------------------------------------------
+
 fn send(ring: *IO_Uring, connection: *Connection) !void {
+    // todo x: event type:
     const event = Event{ .op = .Send, .connection_id = connection.id };
+
+    // ----------------------------------------------------------------
+
+    // todo x:
     const user_data = @bitCast(u64, event);
+
     assert(connection.fd >= 0);
     assert(connection.references == 1);
+
     connection.references += 1;
     const offset = connection.send_offset;
     const size = connection.send_size;
     log.debug("connection {}: send[{}..{}]", .{ connection.id, offset, size });
     assert(size > 0);
+
+    // ----------------------------------------------------------------
+
+    // todo x:
     _ = try ring.send(user_data, connection.fd, connection.send[offset..size], os.MSG_NOSIGNAL);
 }
+
+// ----------------------------------------------------------------
 
 fn send_completed(ring: *IO_Uring, cqe: *const io_uring_cqe, connection: *Connection) !void {
     assert(connection.references == 2);
     connection.references -= 1;
+
     if (cqe.res < 0) {
         switch (-cqe.res) {
             // The connection was forcibly closed by the peer:
@@ -236,13 +309,19 @@ fn send_completed(ring: *IO_Uring, cqe: *const io_uring_cqe, connection: *Connec
         connection.send_offset = 0;
         connection.send_size = 0;
 
+        // ----------------------------------------------------------------
+
         // We have now done a request-response for this connection using static buffers. We don't
         // queue reads before we have acked a batch, because otherwise a client could run ahead of
         // us and exhaust resources. This gives us safe flow control. In other words, a connection
         // only has a single recv/send SQE pending at any time.
         if (connection.recv_size > 0) {
+
+            // todo x:
             try parse(ring, connection, 0);
         } else {
+
+            // todo x:
             try recv(ring, connection);
         }
     }
@@ -263,6 +342,9 @@ fn close_completed(ring: *IO_Uring, cqe: *const io_uring_cqe, connection: *Conne
     connection.references -= 1;
     if (cqe.res < 0) return os.unexpectedErrno(@intCast(usize, -cqe.res));
     log.debug("connection {}: closed", .{connection.id});
+
+    // ----------------------------------------------------------------
+
     try connections.unset(connection.id);
 }
 
@@ -271,24 +353,48 @@ fn event_loop(ring: *IO_Uring, server: os.fd_t) !void {
     var accept_addr: os.sockaddr = undefined;
     var accept_addr_len: os.socklen_t = @sizeOf(@TypeOf(accept_addr));
 
+    // todo x: 死循环
     while (true) {
         const count = try ring.copy_cqes(cqes[0..], 0);
         var i: usize = 0;
+
+        // todo x:
         while (i < count) : (i += 1) {
             const cqe = cqes[i];
             const event = @bitCast(Event, cqe.user_data);
+
+            // todo x:
+            // todo x: 事件循环调度器:
+            // todo x:
             switch (event.op) {
+                // todo x:
                 .Accept => try accept_completed(ring, &cqe),
+
+                // todo x: 接收
                 .Recv => try recv_completed(ring, &cqe, try connections.get(event.connection_id)),
+
+                // todo x: 发送
                 .Send => try send_completed(ring, &cqe, try connections.get(event.connection_id)),
+
+                // todo x:
                 .Close => try close_completed(ring, &cqe, try connections.get(event.connection_id)),
             }
         }
+
+        // ----------------------------------------------------------------
+
         // Decide whether or not to accept another connection here in one place, since there are
         // otherwise many branches above where connections can be closed making space available.
         if (!connections.accepting and connections.available()) {
+
+            // todo x:
+            // todo x:
+            // todo x:
             try accept(ring, server, &accept_addr, &accept_addr_len);
         }
+
+        // ----------------------------------------------------------------
+
         // Submit all queued syscalls and wait for at least one completion event before looping.
         _ = try ring.submit_and_wait(1);
     }

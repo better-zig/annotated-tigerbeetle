@@ -21,7 +21,13 @@ pub const Connection = struct {
     recv_size: usize,
     send_offset: usize,
     send_size: usize,
+
+    // ----------------------------------------------------------------
+
+    // todo x:
     recv: [recv_len]u8 align(config.sector_size) = undefined,
+
+    // todo x:
     send: [send_len]u8 = undefined,
 };
 
@@ -81,6 +87,8 @@ pub const Connections = struct {
         return connection;
     }
 
+    // ----------------------------------------------------------------
+
     pub fn set(self: *Connections, fd: os.fd_t) !*Connection {
         assert(fd >= 0);
         // We expect the TigerBeetle client to maintain long-lived connections.
@@ -94,6 +102,7 @@ pub const Connections = struct {
                 assert(connection.recv_size == 0);
                 assert(connection.send_offset == 0);
                 assert(connection.send_size == 0);
+
                 connection.id = @intCast(u32, index);
                 connection.fd = fd;
                 connection.references += 1;
@@ -104,6 +113,8 @@ pub const Connections = struct {
         }
         unreachable;
     }
+
+    // ----------------------------------------------------------------
 
     pub fn unset(self: *Connections, id: u32) !void {
         const connection = try self.get(id);

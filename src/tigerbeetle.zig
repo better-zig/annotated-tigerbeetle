@@ -7,6 +7,11 @@ const StringifyOptions = std.json.StringifyOptions;
 
 pub const config = @import("tigerbeetle.conf");
 
+// ----------------------------------------------------------------
+
+// todo x:
+// todo x:
+// todo x:
 pub const Command = packed enum(u32) {
     // We reserve command "0" to detect any accidental zero byte being interpreted as a command:
     eof = 1,
@@ -44,6 +49,8 @@ pub const Node = packed struct {
     }
 };
 
+// ----------------------------------------------------------------
+
 pub const Cluster = packed struct {
     id: u128,
     nodes: [config.cluster_nodes]ClusterNode,
@@ -54,6 +61,8 @@ pub const ClusterNode = packed struct {
     host: u32,
     port: u16,
 };
+
+// ----------------------------------------------------------------
 
 pub const Account = packed struct {
     id: u128,
