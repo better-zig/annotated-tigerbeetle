@@ -1,0 +1,31 @@
+{
+    "root": {
+        "data": {
+            "id": "cluqywai5rk0",
+            "created": 1659362655579,
+            "text": "tigerbeetle"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "cluqz28o90g0",
+                    "created": 1659362668529,
+                    "text": "src/main.zig"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "cluqzeeybq80",
+                            "created": 1659362695031,
+                            "text": "topic"
+                        },
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "filetree",
+    "theme": "classic",
+    "version": "1.4.43"
+}
