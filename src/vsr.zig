@@ -911,6 +911,10 @@ pub fn format_journal(cluster: u32, offset: u64, target: []u8) usize {
 
     const sector_max = @divExact(config.journal_size_max, config.sector_size);
     var sectors = std.mem.bytesAsSlice([config.sector_size]u8, target);
+
+    // todo x:
+    // todo x:
+    // todo x:
     for (sectors) |*sector_data, i| {
         const sector = @divExact(offset, config.sector_size) + i;
         if (sector == sector_max) {
@@ -919,6 +923,9 @@ pub fn format_journal(cluster: u32, offset: u64, target: []u8) usize {
             }
             return i * config.sector_size;
         } else {
+            // todo x:
+            // todo x:
+            // todo x:
             format_journal_sector(cluster, sector, sector_data);
         }
     }
@@ -932,6 +939,9 @@ fn format_journal_sector(cluster: u32, sector: usize, sector_data: *[config.sect
     const slot_count = config.journal_slot_count;
     var sector_headers = std.mem.bytesAsSlice(Header, sector_data);
 
+    // todo x:
+    // todo x:
+    // todo x:
     if (sector * headers_per_sector < slot_count) {
         for (sector_headers) |*header, i| {
             const slot = sector * headers_per_sector + i;

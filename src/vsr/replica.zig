@@ -236,6 +236,8 @@ pub fn Replica(
 
         on_change_state: ?fn (replica: *Self) void = null,
 
+        // ----------------------------------------------------------------
+
         pub fn init(
             allocator: Allocator,
             cluster: u32,
@@ -284,6 +286,8 @@ pub fn Replica(
 
             const root_prepare = Header.root_prepare(cluster);
 
+            // ----------------------------------------------------------------
+
             var clock = try Clock.init(
                 allocator,
                 replica_count,
@@ -303,6 +307,8 @@ pub fn Replica(
                 hash.final(&nonce);
                 break :blk @bitCast(Nonce, nonce);
             };
+
+            // ----------------------------------------------------------------
 
             var self = Self{
                 .cluster = cluster,
@@ -384,6 +390,8 @@ pub fn Replica(
             return self;
         }
 
+        // ----------------------------------------------------------------
+
         /// Free all memory and unref all messages held by the replica
         /// This does not deinitialize the StateMachine, MessageBus, Storage, or Time
         pub fn deinit(self: *Self, allocator: Allocator) void {
@@ -415,6 +423,8 @@ pub fn Replica(
             }
         }
 
+        // ----------------------------------------------------------------
+
         /// Time is measured in logical ticks that are incremented on every call to tick().
         /// This eliminates a dependency on the system time and enables deterministic testing.
         pub fn tick(self: *Self) void {
@@ -425,6 +435,8 @@ pub fn Replica(
             assert(self.loopback_queue == null);
 
             self.clock.tick();
+
+            // ----------------------------------------------------------------
 
             if (!self.journal.recovered) {
                 if (!self.journal.recovering) self.journal.recover();
@@ -460,6 +472,8 @@ pub fn Replica(
                 }
                 return;
             }
+
+            // ----------------------------------------------------------------
 
             self.ping_timeout.tick();
             self.prepare_timeout.tick();

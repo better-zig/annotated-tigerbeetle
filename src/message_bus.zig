@@ -80,6 +80,8 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
         /// Seeded with the process' replica index or client ID.
         prng: std.rand.DefaultPrng,
 
+        // ----------------------------------------------------------------
+
         /// Initialize the MessageBus for the given cluster, configuration and replica/client process.
         pub fn init(
             allocator: mem.Allocator,
@@ -111,6 +113,8 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
                 .client => @truncate(u64, process),
             };
 
+            // ----------------------------------------------------------------
+
             var bus: Self = .{
                 .pool = try MessagePool.init(allocator, process_type),
                 .io = io,
@@ -137,6 +141,8 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
             return bus;
         }
 
+        // ----------------------------------------------------------------
+
         pub fn set_on_message(
             bus: *Self,
             comptime Context: type,
@@ -154,8 +160,12 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
             bus.on_message_context = context;
         }
 
+        // ----------------------------------------------------------------
+
         /// TODO This is required by the Client.
         pub fn deinit(_: *Self) void {}
+
+        // ----------------------------------------------------------------
 
         fn init_tcp(io: *IO, address: std.net.Address) !os.socket_t {
             const fd = try io.open_socket(
@@ -226,8 +236,11 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
             return fd;
         }
 
+        // ----------------------------------------------------------------
+
         pub fn tick(bus: *Self) void {
             switch (process_type) {
+                // todo x:
                 .replica => {
                     // Each replica is responsible for connecting to replicas that come
                     // after it in the configuration. This ensures that replicas never try
@@ -240,6 +253,8 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
                     // Only replicas accept connections from other replicas and clients:
                     bus.maybe_accept();
                 },
+
+                // todo x:
                 .client => {
                     // The client connects to all replicas.
                     var replica: u8 = 0;
@@ -249,6 +264,8 @@ fn MessageBusImpl(comptime process_type: vsr.ProcessType) type {
                 },
             }
         }
+
+        // ----------------------------------------------------------------
 
         fn maybe_connect_to_replica(bus: *Self, replica: u8) void {
             // We already have a connection to the given replica.

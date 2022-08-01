@@ -23,6 +23,7 @@ const HashMapAccounts = std.AutoHashMap(u128, Account);
 const HashMapTransfers = std.AutoHashMap(u128, Transfer);
 const HashMapPosted = std.AutoHashMap(u128, bool);
 
+// todo x: 状态机
 pub const StateMachine = struct {
     pub const Operation = enum(u8) {
         /// Operations reserved by VR protocol (for all state machines):
@@ -40,9 +41,17 @@ pub const StateMachine = struct {
     allocator: mem.Allocator,
     prepare_timestamp: u64,
     commit_timestamp: u64,
+
+    // todo x:
     accounts: HashMapAccounts,
+
+    // todo x:
     transfers: HashMapTransfers,
+
+    // todo x:
     posted: HashMapPosted,
+
+    // ----------------------------------------------------------------
 
     pub fn init(
         allocator: mem.Allocator,
@@ -62,6 +71,8 @@ pub const StateMachine = struct {
         errdefer posted.deinit();
         try posted.ensureTotalCapacity(@intCast(u32, transfers_pending_max));
 
+        // ----------------------------------------------------------------
+
         return StateMachine{
             .allocator = allocator,
             .prepare_timestamp = 0,
@@ -71,6 +82,8 @@ pub const StateMachine = struct {
             .posted = posted,
         };
     }
+
+    // ----------------------------------------------------------------
 
     pub fn deinit(self: *StateMachine) void {
         self.accounts.deinit();

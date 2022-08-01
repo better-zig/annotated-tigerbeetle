@@ -16,6 +16,8 @@ pub const Storage = struct {
         always_asynchronous,
     } = .always_asynchronous;
 
+    // ----------------------------------------------------------------
+
     pub const Read = struct {
         completion: IO.Completion,
         callback: fn (read: *Storage.Read) void,
@@ -61,6 +63,8 @@ pub const Storage = struct {
         }
     };
 
+    // ----------------------------------------------------------------
+
     pub const Write = struct {
         completion: IO.Completion,
         callback: fn (write: *Storage.Write) void,
@@ -68,9 +72,13 @@ pub const Storage = struct {
         offset: u64,
     };
 
+    // ----------------------------------------------------------------
+
     size: u64,
     fd: os.fd_t,
     io: *IO,
+
+    // ----------------------------------------------------------------
 
     pub fn init(size: u64, fd: os.fd_t, io: *IO) !Storage {
         return Storage{
@@ -79,6 +87,8 @@ pub const Storage = struct {
             .io = io,
         };
     }
+
+    // ----------------------------------------------------------------
 
     pub fn deinit() void {}
 

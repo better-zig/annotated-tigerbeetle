@@ -3,21 +3,206 @@
         "data": {
             "id": "cluqywai5rk0",
             "created": 1659362655579,
-            "text": "tigerbeetle"
+            "text": "tigerbeetle",
+            "color": "#430",
+            "font-family": "宋体,SimSun",
+            "font-weight": "bold"
         },
         "children": [
             {
                 "data": {
-                    "id": "cluqz28o90g0",
-                    "created": 1659362668529,
-                    "text": "src/main.zig"
+                    "id": "cluto866iow0",
+                    "created": 1659370282763,
+                    "text": "代码入口分析",
+                    "expandState": "expand",
+                    "color": "#430",
+                    "font-family": "宋体,SimSun",
+                    "font-weight": "bold"
                 },
                 "children": [
                     {
                         "data": {
-                            "id": "cluqzeeybq80",
-                            "created": 1659362695031,
-                            "text": "topic"
+                            "id": "cluqz28o90g0",
+                            "created": 1659362668529,
+                            "text": "src/main.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "cluqzeeybq80",
+                                    "created": 1659362695031,
+                                    "text": "topic",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "clutod7syg00",
+                    "created": 1659370293745,
+                    "text": "代码文件",
+                    "color": "#430",
+                    "font-family": "宋体,SimSun",
+                    "font-weight": "bold"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "clutoh6mcf40",
+                            "created": 1659370302381,
+                            "text": "src/main.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutojs5b2w0",
+                                    "created": 1659370308036,
+                                    "text": "项目入口",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutoz6mr3k0",
+                            "created": 1659370341564,
+                            "text": "src/cli.zig",
+                            "expandState": "collapse",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutp15avtk0",
+                                    "created": 1659370345837,
+                                    "text": "命令行参数定义",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutvdcg0qo0",
+                            "created": 1659370842575,
+                            "text": "src/storage.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutveck80w0",
+                                    "created": 1659370844759,
+                                    "text": "存储",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutosbbb7s0",
+                            "created": 1659370326609,
+                            "text": "src/sate_machine.zig",
+                            "expandState": "collapse",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutovy8sog0",
+                                    "created": 1659370334526,
+                                    "text": "状态机",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutv5pmndk0",
+                            "created": 1659370825958,
+                            "text": "src/message_bus.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutv6v8go00",
+                                    "created": 1659370828474,
+                                    "text": "消息总线",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutvj50nqg0",
+                            "created": 1659370855187,
+                            "text": "src/vsr/replica.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "clutvo4yao00",
+                                    "created": 1659370866067,
+                                    "text": "集群多副本",
+                                    "color": "#430",
+                                    "font-family": "宋体,SimSun",
+                                    "font-weight": "bold"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "clutvlyzpu80",
+                            "created": 1659370861353,
+                            "text": "src/vsr.zig",
+                            "color": "#430",
+                            "font-family": "宋体,SimSun",
+                            "font-weight": "bold"
                         },
                         "children": []
                     }
@@ -26,6 +211,6 @@
         ]
     },
     "template": "filetree",
-    "theme": "classic",
+    "theme": "snow",
     "version": "1.4.43"
 }

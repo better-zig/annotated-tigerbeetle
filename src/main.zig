@@ -40,6 +40,7 @@ pub fn main() !void {
 
     // todo x: 解析命令行参数
     switch (try cli.parse_args(allocator)) {
+        // todo x:
         .init => |args| try init(&io, args.cluster, args.replica, args.dir_fd),
 
         // todo x: 入口:
@@ -60,6 +61,9 @@ pub fn main() !void {
 const filename_fmt = "cluster_{d:0>10}_replica_{d:0>3}.tigerbeetle";
 const filename_len = fmt.count(filename_fmt, .{ 0, 0 });
 
+// todo x:
+// todo x: 初始化
+// todo x:
 /// Create a .tigerbeetle data file for the given args and exit
 fn init(io: *IO, cluster: u32, replica: u8, dir_fd: os.fd_t) !void {
     // Add 1 for the terminating null byte
@@ -76,6 +80,7 @@ fn init(io: *IO, cluster: u32, replica: u8, dir_fd: os.fd_t) !void {
     );
     std.os.close(fd);
 
+    // todo x:
     const file = try (std.fs.Dir{ .fd = dir_fd }).openFile(filename, .{ .write = true });
     defer file.close();
 
@@ -83,9 +88,17 @@ fn init(io: *IO, cluster: u32, replica: u8, dir_fd: os.fd_t) !void {
         const write_size_max = 4 * 1024 * 1024;
         var write: [write_size_max]u8 = undefined;
         var offset: u64 = 0;
+
+        // todo x:
+        // todo x:
+        // todo x:
         while (true) {
+
+            // todo x:
             const write_size = vsr.format_journal(cluster, offset, &write);
             if (write_size == 0) break;
+
+            // todo x:
             try file.writeAll(write[0..write_size]);
             offset += write_size;
         }
@@ -154,6 +167,8 @@ fn start(
 
     var time: Time = .{};
 
+    // ----------------------------------------------------------------
+
     // todo x:
     // todo x:
     // todo x:
@@ -167,6 +182,10 @@ fn start(
         &message_bus,
         &state_machine,
     );
+
+    // todo x
+    // todo x:
+    // todo x:
     message_bus.set_on_message(*Replica, &replica, Replica.on_message);
 
     log.info("cluster={x} replica={}: listening on {}", .{
