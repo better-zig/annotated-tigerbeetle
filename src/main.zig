@@ -372,12 +372,18 @@ fn set_socket_option(fd: os.fd_t, level: u32, option: u32, value: u31) !void {
     }
 }
 
+// ----------------------------------------------------------------
+
+// todo x:
+// todo x
+// todo x
 pub fn main() !void {
     // TODO Log all config variables at debug level at startup.
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     var allocator = &arena.allocator;
 
+    // todo x:
     leader = try Leader.init();
     defer leader.deinit();
 
@@ -387,6 +393,11 @@ pub fn main() !void {
     journal = try Journal.init(allocator, &state);
     defer journal.deinit();
 
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     connections = try Connections.init(allocator, config.connections_max);
     defer connections.deinit();
 
@@ -394,9 +405,14 @@ pub fn main() !void {
     var ring = try IO_Uring.init(128, 0);
     defer ring.deinit();
 
+    // ----------------------------------------------------------------
+
     var server = try tcp_server_init();
     defer os.close(server);
 
+    // todo x:
+    // todo x:
+    // todo x:
     try event_loop(&ring, server);
 }
 

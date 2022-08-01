@@ -1,6 +1,14 @@
+# tigerbeetle 源码分析
+
+- tigerbeetle 是基于 zig 开发的数据库中间件.
+
+## 分析笔记:
+
+- [.annotated/](./.annotated/readme.md)
+
 # tigerbeetle
 
-*TigerBeetle is a purpose-built accounting database, designed for high-throughput low-latency two-phase prepare/commit transfers between accounts.*
+_TigerBeetle is a purpose-built accounting database, designed for high-throughput low-latency two-phase prepare/commit transfers between accounts._
 
 Watch a video introduction of TigerBeetle given to the [Interledger](https://interledger.org/) community on 25 November 2020:
 
@@ -77,8 +85,8 @@ After each run of the benchmark, you must delete TigerBeetle's `journal` data fi
 
 ## Clients
 
-* [client](./src/client) is a TigerBeetle client written in Typescript (pending a few updates to support recent network protocol changes).
-* [toy.zig](./src/toy.zig) is a TigerBeetle client written in Zig, which we used to create [six demos you can work your way through and modify](./docs/DEEP_DIVE.md) to explore TigerBeetle's commands.
+- [client](./src/client) is a TigerBeetle client written in Typescript (pending a few updates to support recent network protocol changes).
+- [toy.zig](./src/toy.zig) is a TigerBeetle client written in Zig, which we used to create [six demos you can work your way through and modify](./docs/DEEP_DIVE.md) to explore TigerBeetle's commands.
 
 ## Performance Demos
 
@@ -86,7 +94,7 @@ Along the way, we also put together a series of performance demos and sketches t
 
 You may be interested in:
 
-* [demos/protobeetle](./demos/protobeetle), how batching changes everything.
-* [demos/bitcast](./demos/bitcast), how Zig makes zero-overhead network deserialization easy, fast and safe.
-* [demos/io_uring](./demos/io_uring), how ring buffers can eliminate kernel syscalls, reduce server hardware requirements by a factor of two, and change the way we think about event loops.
-* [demos/hash_table](./demos/hash_table), how linear probing compares with cuckoo probing, and what we look for in a hash table that needs to scale to millions (and billions) of account transfers.
+- [demos/protobeetle](./demos/protobeetle), how batching changes everything.
+- [demos/bitcast](./demos/bitcast), how Zig makes zero-overhead network deserialization easy, fast and safe.
+- [demos/io_uring](./demos/io_uring), how ring buffers can eliminate kernel syscalls, reduce server hardware requirements by a factor of two, and change the way we think about event loops.
+- [demos/hash_table](./demos/hash_table), how linear probing compares with cuckoo probing, and what we look for in a hash table that needs to scale to millions (and billions) of account transfers.
