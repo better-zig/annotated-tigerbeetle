@@ -8,6 +8,7 @@ const log = std.log;
 const config = @import("config.zig");
 pub const log_level: std.log.Level = @intToEnum(std.log.Level, config.log_level);
 
+// todo x: 命令行参数
 const cli = @import("cli.zig");
 
 const IO = @import("io.zig").IO;
@@ -19,17 +20,29 @@ const StateMachine = @import("state_machine.zig").StateMachine;
 const vsr = @import("vsr.zig");
 const Replica = vsr.Replica(StateMachine, MessageBus, Storage, Time);
 
+// ----------------------------------------------------------------
+
 pub fn main() !void {
+
+    // ----------------------------------------------------------------
+
+    // todo x:
     var io = try IO.init(128, 0);
     defer io.deinit();
 
+    // todo x:
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
 
     const allocator = arena.allocator();
 
+    // ----------------------------------------------------------------
+
+    // todo x: 解析命令行参数
     switch (try cli.parse_args(allocator)) {
         .init => |args| try init(&io, args.cluster, args.replica, args.dir_fd),
+
+        // todo x: 入口:
         .start => |args| try start(
             &io,
             allocator,
@@ -40,6 +53,8 @@ pub fn main() !void {
         ),
     }
 }
+
+// ----------------------------------------------------------------
 
 // Pad the cluster id number and the replica index with 0s
 const filename_fmt = "cluster_{d:0>10}_replica_{d:0>3}.tigerbeetle";
@@ -79,6 +94,8 @@ fn init(io: *IO, cluster: u32, replica: u8, dir_fd: os.fd_t) !void {
     log.info("initialized data file", .{});
 }
 
+// ----------------------------------------------------------------
+
 /// Run as a replica server defined by the given args
 fn start(
     io: *IO,
@@ -103,13 +120,30 @@ fn start(
         false,
     );
 
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     var state_machine = try StateMachine.init(
         allocator,
         config.accounts_max,
         config.transfers_max,
         config.transfers_pending_max,
     );
+
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     var storage = try Storage.init(config.journal_size_max, storage_fd, io);
+
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     var message_bus = try MessageBus.init(
         allocator,
         cluster,
@@ -117,7 +151,12 @@ fn start(
         replica_index,
         io,
     );
+
     var time: Time = .{};
+
+    // todo x:
+    // todo x:
+    // todo x:
     var replica = try Replica.init(
         allocator,
         cluster,
@@ -136,9 +175,22 @@ fn start(
         addresses[replica_index],
     });
 
+    // ----------------------------------------------------------------
+
+    // todo x:
+    // todo x:
+    // todo x:
     while (true) {
+        // todo x:
+        // todo x:
         replica.tick();
+
+        // todo x:
+        // todo x:
         message_bus.tick();
+
+        // todo x:
+        // todo x:
         try io.run_for_ns(config.tick_ms * std.time.ns_per_ms);
     }
 }
