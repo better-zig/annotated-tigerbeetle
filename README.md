@@ -1,8 +1,14 @@
+# tigerbeetle 源码分析:
+
+## 源码分析笔记:
+
+- [.annotated/](./.annotated/readme.md)
+
 # tigerbeetle
 
-*TigerBeetle is a financial accounting database designed for mission critical safety and performance to power the future of financial services.*
+_TigerBeetle is a financial accounting database designed for mission critical safety and performance to power the future of financial services._
 
-**Take part in TigerBeetle's $20k consensus challenge: [Viewstamped Replication Made Famous](https://github.com/coilhq/viewstamped-replication-made-famous)**
+**Take part in TigerBeetle's \$20k consensus challenge: [Viewstamped Replication Made Famous](https://github.com/coilhq/viewstamped-replication-made-famous)**
 
 Watch an introduction to TigerBeetle on [Zig SHOWTIME](https://www.youtube.com/watch?v=BH2jvJ74npM) for our design decisions regarding performance, safety, and financial accounting primitives:
 
@@ -70,7 +76,7 @@ With TigerBeetle installed, you are ready to benchmark!
 scripts/benchmark.sh
 ```
 
-*If you encounter any benchmark errors, please send us the resulting `benchmark.log`.*
+_If you encounter any benchmark errors, please send us the resulting `benchmark.log`._
 
 ## Tests
 
@@ -86,19 +92,19 @@ The [QuickStart](#quickstart) step above will install Zig for you to the root of
 
 ### Simulation Tests
 
-To run TigerBeetle's long-running simulation, called *The VOPR*:
+To run TigerBeetle's long-running simulation, called _The VOPR_:
 
 ```bash
 scripts/vopr.sh
 ```
 
-*The VOPR* stands for *The Viewstamped Operation Replicator* and was inspired by the movie WarGames, by our love of fuzzing over the years, by [Dropbox's Nucleus testing](https://dropbox.tech/infrastructure/-testing-our-new-sync-engine), and by [FoundationDB's deterministic simulation testing](https://www.youtube.com/watch?v=OJb8A6h9jQQ).
+_The VOPR_ stands for _The Viewstamped Operation Replicator_ and was inspired by the movie WarGames, by our love of fuzzing over the years, by [Dropbox's Nucleus testing](https://dropbox.tech/infrastructure/-testing-our-new-sync-engine), and by [FoundationDB's deterministic simulation testing](https://www.youtube.com/watch?v=OJb8A6h9jQQ).
 
-*The VOPR* is [a deterministic simulator](src/simulator.zig) that can fuzz many clusters of TigerBeetle servers and clients interacting through TigerBeetle's Viewstamped Replication consensus protocol, but all within a single developer machine process, with [a network simulator](src/test/packet_simulator.zig) to simulate all kinds of network faults, and with an in-memory [storage simulator](src/test/storage.zig) to simulate all kinds of storage faults, to explore and test TigerBeetle against huge state spaces in a short amount of time, by literally speeding up the passing of time within the simulation itself.
+_The VOPR_ is [a deterministic simulator](src/simulator.zig) that can fuzz many clusters of TigerBeetle servers and clients interacting through TigerBeetle's Viewstamped Replication consensus protocol, but all within a single developer machine process, with [a network simulator](src/test/packet_simulator.zig) to simulate all kinds of network faults, and with an in-memory [storage simulator](src/test/storage.zig) to simulate all kinds of storage faults, to explore and test TigerBeetle against huge state spaces in a short amount of time, by literally speeding up the passing of time within the simulation itself.
 
-Beyond being a deterministic simulator, *The VOPR* also features [a state checker](src/test/state_checker.zig) that can hook into all the replicas, and check all their state transitions the instant they take place, using cryptographic hash chaining to prove causality and check that all interim state transitions are valid, based on any of the set of inflight client requests at the time, without divergent states, and then check for convergence to the highest state at the end of the simulation, to distinguish between correctness or liveness bugs.
+Beyond being a deterministic simulator, _The VOPR_ also features [a state checker](src/test/state_checker.zig) that can hook into all the replicas, and check all their state transitions the instant they take place, using cryptographic hash chaining to prove causality and check that all interim state transitions are valid, based on any of the set of inflight client requests at the time, without divergent states, and then check for convergence to the highest state at the end of the simulation, to distinguish between correctness or liveness bugs.
 
-Check out TigerBeetle's [Viewstamped Replication Made Famous](https://github.com/coilhq/viewstamped-replication-made-famous#how-can-i-run-the-implementation-how-many-batteries-are-included-do-you-mean-i-can-even-run-the-vopr) bug bounty challenge repository for more details on how to run *The VOPR* and interpret its output.
+Check out TigerBeetle's [Viewstamped Replication Made Famous](https://github.com/coilhq/viewstamped-replication-made-famous#how-can-i-run-the-implementation-how-many-batteries-are-included-do-you-mean-i-can-even-run-the-vopr) bug bounty challenge repository for more details on how to run _The VOPR_ and interpret its output.
 
 ## Launch a Local Cluster
 
@@ -122,11 +128,11 @@ Run the TigerBeetle binary to see all command line arguments:
 
 ## Clients
 
-* [tigerbeetle-node](https://github.com/coilhq/tigerbeetle-node) is a TigerBeetle Node.js client written in TypeScript (and Zig with [Node's N-API](https://nodejs.org/api/n-api.html) for ABI stability).
+- [tigerbeetle-node](https://github.com/coilhq/tigerbeetle-node) is a TigerBeetle Node.js client written in TypeScript (and Zig with [Node's N-API](https://nodejs.org/api/n-api.html) for ABI stability).
 
-* [client.zig](./src/vr/client.zig) is a TigerBeetle Zig client.
+- [client.zig](./src/vr/client.zig) is a TigerBeetle Zig client.
 
-* [demo.zig](./src/demo.zig) is a lightweight TigerBeetle client for demonstration purposes only, which we used to create [six demos you can work your way through and modify](./docs/DEEP_DIVE.md) to explore TigerBeetle's commands.
+- [demo.zig](./src/demo.zig) is a lightweight TigerBeetle client for demonstration purposes only, which we used to create [six demos you can work your way through and modify](./docs/DEEP_DIVE.md) to explore TigerBeetle's commands.
 
 ## Community
 
@@ -138,10 +144,10 @@ Along the way, we also put together a series of performance demos and sketches t
 
 You may be interested in:
 
-* [demos/protobeetle](./demos/protobeetle), how batching changes everything.
-* [demos/bitcast](./demos/bitcast), how Zig makes zero-overhead network deserialization easy, fast and safe.
-* [demos/io_uring](./demos/io_uring), how ring buffers can eliminate kernel syscalls, reduce server hardware requirements by a factor of two, and change the way we think about event loops.
-* [demos/hash_table](./demos/hash_table), how linear probing compares with cuckoo probing, and what we look for in a hash table that needs to scale to millions (and billions) of account transfers.
+- [demos/protobeetle](./demos/protobeetle), how batching changes everything.
+- [demos/bitcast](./demos/bitcast), how Zig makes zero-overhead network deserialization easy, fast and safe.
+- [demos/io_uring](./demos/io_uring), how ring buffers can eliminate kernel syscalls, reduce server hardware requirements by a factor of two, and change the way we think about event loops.
+- [demos/hash_table](./demos/hash_table), how linear probing compares with cuckoo probing, and what we look for in a hash table that needs to scale to millions (and billions) of account transfers.
 
 ## License
 
