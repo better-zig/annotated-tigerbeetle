@@ -4,6 +4,10 @@
 
 - [.annotated/](./.annotated/readme.md)
 
+> 分支:
+
+- `annotated-v2022-08-01`, 当前`打 tag` 的版本, 很老, 代码已经过时. 故在 `main 分支`分析.
+
 # tigerbeetle
 
 _TigerBeetle is a financial accounting database designed for mission critical safety and performance to power the future of financial services._
